@@ -52,8 +52,8 @@ export default {
     readerSize: {
       type: Object,
       default: () => ({
-        width: 640,
-        height: 480,
+        width: 240,
+        height: 280,
       }),
       validator: (o) => typeof o.width === "number" && typeof o.height === "number",
     },
@@ -129,10 +129,8 @@ export default {
 }
 .viewport canvas,
 .viewport video {
-  width: 100%;
-  /* height: 100%; */
-  /* position: absolute;
-	left: 0;
-	top: 0; */
+  position: absolute;
+  left: 0;
+  top: 0;
 }
 </style>
