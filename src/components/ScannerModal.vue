@@ -1,103 +1,138 @@
 <template>
-  <div class="scanner-container">
-    <div>
-      <video poster="data:image/gif,AAAA" ref="scanner"></video>
-      <div class="overlay-element"></div>
-      <div class="laser"></div>
-    </div>
+  <div id="interactive" class="viewport scanner">
+    <video />
+    <canvas class="drawingBuffer" />
   </div>
 </template>
 
 <script>
-import { BrowserMultiFormatReader, Exception } from "@zxing/library";
-
+import Quagga from "quagga";
 export default {
-  name: "stream-barcode-reader",
-
+  name: "QuaggaScanner",
   props: {
-    busy: {
-      type: Boolean,
-      default: false,
+    onDetected: {
+      type: Function,
+      default(result) {
+        alert("detected: ", result);
+      },
+    },
+    onProcessed: {
+      type: Function,
+      default(result) {
+        let drawingCtx = Quagga.canvas.ctx.overlay;
+        let drawingCanvas = Quagga.canvas.dom.overlay;
+        if (result) {
+          if (result.boxes) {
+            drawingCtx.clearRect(0, 0, parseInt(drawingCanvas.getAttribute("width")), parseInt(drawingCanvas.getAttribute("height")));
+            result.boxes
+              .filter(function (box) {
+                return box !== result.box;
+              })
+              .forEach(function (box) {
+                Quagga.ImageDebug.drawPath(box, { x: 0, y: 1 }, drawingCtx, {
+                  color: "green",
+                  lineWidth: 2,
+                });
+              });
+          }
+          if (result.box) {
+            Quagga.ImageDebug.drawPath(result.box, { x: 0, y: 1 }, drawingCtx, {
+              color: "#00F",
+              lineWidth: 2,
+            });
+          }
+          if (result.codeResult && result.codeResult.code) {
+            Quagga.ImageDebug.drawPath(result.line, { x: "x", y: "y" }, drawingCtx, { color: "red", lineWidth: 3 });
+          }
+        }
+      },
+    },
+    readerTypes: {
+      type: Array,
+      default: () => ["code_128_reader"],
+    },
+    readerSize: {
+      type: Object,
+      default: () => ({
+        width: 640,
+        height: 480,
+      }),
+      validator: (o) => typeof o.width === "number" && typeof o.height === "number",
+    },
+    aspectRatio: {
+      type: Object,
+      default: () => ({
+        min: 1,
+        max: 2,
+      }),
+      validator: (o) => typeof o.min === "number" && typeof o.max === "number",
+    },
+    facingMode: {
+      type: String,
+      default: () => "environment",
     },
   },
-
-  data() {
+  data: function () {
     return {
-      isLoading: true,
-      codeReader: new BrowserMultiFormatReader(),
-      isMediaStreamAPISupported: navigator && navigator.mediaDevices && "enumerateDevices" in navigator.mediaDevices,
+      quaggaState: {
+        inputStream: {
+          type: "LiveStream",
+          constraints: {
+            width: { min: this.readerSize.width },
+            height: { min: this.readerSize.height },
+            facingMode: this.facingMode,
+            aspectRatio: { min: 1, max: 2 },
+          },
+        },
+        locator: {
+          patchSize: "medium",
+          halfSample: true,
+        },
+        numOfWorkers: 2,
+        frequency: 10,
+        decoder: {
+          readers: this.readerTypes,
+        },
+        locate: true,
+      },
     };
   },
-
-  mounted() {
-    if (!this.isMediaStreamAPISupported) {
-      throw new Exception("Media Stream API is not supported");
-      return;
-    }
-
-    this.start();
-    this.$refs.scanner.oncanplay = () => {
-      //this.isLoading = false;
-      this.$emit("loaded");
-    };
-  },
-
-  beforeUnmount() {
-    this.codeReader.reset();
-  },
-
-  methods: {
-    start() {
-      this.codeReader.decodeFromVideoDevice(undefined, this.$refs.scanner, (result, err) => {
-        if (result && !this.busy) this.$emit("decode", result.text);
-      });
+  watch: {
+    onDetected: function (oldValue, newValue) {
+      if (oldValue) Quagga.offDetected(oldValue);
+      if (newValue) Quagga.onDetected(newValue);
     },
+    onProcessed: function (oldValue, newValue) {
+      if (oldValue) Quagga.offProcessed(oldValue);
+      if (newValue) Quagga.onProcessed(newValue);
+    },
+  },
+  mounted: function () {
+    Quagga.init(this.quaggaState, function (err) {
+      if (err) {
+        return console.error(err);
+      }
+      Quagga.start();
+    });
+    Quagga.onDetected(this.onDetected);
+    Quagga.onProcessed(this.onProcessed);
+  },
+  destroyed: function () {
+    if (this.onDetected) Quagga.offDetected(this.onDetected);
+    if (this.onProcessed) Quagga.offProcessed(this.offProcessed);
+    Quagga.stop();
   },
 };
 </script>
 
 <style scoped>
-video {
-  max-width: 100%;
-  max-height: 100%;
-}
-.scanner-container {
+.viewport {
   position: relative;
 }
-
-.overlay-element {
+.viewport canvas,
+.viewport video {
   position: absolute;
+  left: 0;
   top: 0;
-  width: 100%;
-  height: 99%;
-  background: rgba(30, 30, 30, 0.5);
-
-  -webkit-clip-path: polygon(0% 0%, 0% 100%, 20% 100%, 20% 20%, 80% 20%, 80% 80%, 20% 80%, 20% 100%, 100% 100%, 100% 0%);
-  clip-path: polygon(0% 0%, 0% 100%, 20% 100%, 20% 20%, 80% 20%, 80% 80%, 20% 80%, 20% 100%, 100% 100%, 100% 0%);
-}
-
-.laser {
-  width: 60%;
-  margin-left: 20%;
-  background-color: tomato;
-  height: 1px;
-  position: absolute;
-  top: 40%;
-  z-index: 2;
-  box-shadow: 0 0 4px red;
-  -webkit-animation: scanning 2s infinite;
-  animation: scanning 2s infinite;
-}
-@-webkit-keyframes scanning {
-  50% {
-    -webkit-transform: translateY(75px);
-    transform: translateY(75px);
-  }
-}
-@keyframes scanning {
-  50% {
-    -webkit-transform: translateY(75px);
-    transform: translateY(75px);
-  }
 }
 </style>

@@ -1,8 +1,7 @@
 <template>
   <div size="100%" title="Scan your Product" style="background: red">
     <div class="w-full flex flex-col items-center justify-center h-full">
-      <div v-if="data.loading">Loading....</div>
-      <StreamBarcodeReader @decode="onDecode" @loaded="onLoaded"></StreamBarcodeReader>
+      <StreamBarcodeReader />
     </div>
   </div>
 </template>

@@ -9,6 +9,7 @@
   "dependencies": {
     "@zxing/library": "^0.19.1",
     "html5-qrcode": "^2.2.4",
+    "quagga": "^0.12.1",
     "vue": "^3.2.41"
   },
   "devDependencies": {
