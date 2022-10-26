@@ -11,7 +11,7 @@
 import { ref, reactive } from "vue";
 import StreamBarcodeReader from "./components/ScannerModal.vue";
 
-const data = reactive({ loading: true, isAdding: false, barcode });
+const data = reactive({ loading: true, isAdding: false, barcode: null });
 
 const onLoaded = () => (data.loading = false);
 
