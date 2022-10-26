@@ -8,7 +8,7 @@
       <video poster="data:image/gif, AAAA" id="video" ref="scanner" />
       <div class="overlay-element"></div>
       <div class="laser"></div>
-      <h5>{{ barcodeText }}</h5>
+      <h5 style="color: White; background: red">Code here{{ barcodeText }}</h5>
       <!-- <div class="select" id="sourceSelectPanel" v-if="showChange">
         <label for="sourceSelect">Change video source:</label>
         <select id="sourceSelect" style="max-width: 400px" v-model="selectedDeviceId">
@@ -109,7 +109,7 @@ video {
   top: 0;
   width: 100%;
   height: 99%;
-  background: rgba(30, 30, 30, 0.5);
+
   -webkit-clip-path: polygon(0% 0%, 0% 100%, 20% 100%, 20% 20%, 80% 20%, 80% 80%, 20% 80%, 20% 100%, 100% 100%, 100% 0%);
   clip-path: polygon(0% 0%, 0% 100%, 20% 100%, 20% 20%, 80% 20%, 80% 80%, 20% 80%, 20% 100%, 100% 100%, 100% 0%);
 }
