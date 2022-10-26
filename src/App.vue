@@ -21,10 +21,8 @@ const logIt = (data) => {
 };
 
 const onDecode = async (text) => {
-  alert(text);
-  if (data.isAdding) return false;
-
-  data.isAdding = false;
+  data.barcode = data;
+  alert(data, data.codeResult.code);
 };
 </script>
 
