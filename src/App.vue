@@ -16,7 +16,7 @@ const data = reactive({ loading: true, isAdding: false, barcode: null });
 const onLoaded = () => (data.loading = false);
 
 const logIt = (data) => {
-  alert("logIt", data.codeResult.code);
+  alert(data.codeResult.code);
 };
 
 const onDecode = async (text) => {
