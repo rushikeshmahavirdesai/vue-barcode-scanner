@@ -8,15 +8,15 @@
       <video poster="data:image/gif, AAAA" id="video" ref="scanner" />
       <div class="overlay-element"></div>
       <div class="laser"></div>
-
-      <div class="select" id="sourceSelectPanel" style="display: none" v-if="showChange">
+      <h5>{{ barcodeText }}</h5>
+      <!-- <div class="select" id="sourceSelectPanel" v-if="showChange">
         <label for="sourceSelect">Change video source:</label>
         <select id="sourceSelect" style="max-width: 400px" v-model="selectedDeviceId">
           <option v-for="source in sourceSelect" :key="source.value" :value="source.value">
             {{ source.text }}
           </option>
         </select>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>
@@ -29,6 +29,7 @@ export default {
   props: { showReset: false, showChange: false, showStart: false },
   data() {
     return {
+      barcodeText: "",
       isLoading: false,
       scanner: new BrowserMultiFormatReader(),
       isMediaStreamAPISupported: navigator && navigator.mediaDevices && "enumerateDevices" in navigator.mediaDevices,
@@ -65,8 +66,8 @@ export default {
             this.sourceSelect.push(sourceOption);
           });
 
-          const sourceSelectPanel = document.getElementById("sourceSelectPanel");
-          sourceSelectPanel.style.display = "block";
+          //  const sourceSelectPanel = document.getElementById("sourceSelectPanel");
+          //  sourceSelectPanel.style.display = "block";
         }
       });
       this.onStart();
@@ -74,7 +75,8 @@ export default {
     onStart() {
       this.scanner.decodeFromVideoDevice(this.selectedDeviceId, "video", (result, err) => {
         if (result) {
-          this.$emit("decode", result.text);
+          this.barcodeText = result.text;
+          // this.$emit("decode", result.text);
           // console.log(result.text)
         }
         if (err && !(err instanceof Exception)) {
