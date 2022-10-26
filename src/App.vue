@@ -1,8 +1,6 @@
 <template>
   <div size="100%" title="Scan your Product" style="background: red; height: 100%">
-    <div class="w-full flex flex-col items-center justify-center h-full">
-      <StreamBarcodeReader :onDetected="logIt" />
-    </div>
+    <StreamBarcodeReader :onDetected="logIt" />
   </div>
 </template>
 
