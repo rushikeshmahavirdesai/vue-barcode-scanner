@@ -12,9 +12,7 @@ export default {
   props: {
     onDetected: {
       type: Function,
-      default(result) {
-        alert("detected: ", result);
-      },
+      default(result) {},
     },
     onProcessed: {
       type: Function,
