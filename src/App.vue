@@ -1,6 +1,7 @@
 <template>
   <div size="100%" title="Scan your Product" style="background: red">
     <div class="w-full flex flex-col items-center justify-center h-full">
+      <textarea name="" v-model="data.barcode" id="" cols="30" rows="10"></textarea>
       <StreamBarcodeReader :onDetected="logIt" />
     </div>
   </div>
@@ -10,11 +11,12 @@
 import { ref, reactive } from "vue";
 import StreamBarcodeReader from "./components/ScannerModal.vue";
 
-const data = reactive({ loading: true, isAdding: false });
+const data = reactive({ loading: true, isAdding: false, barcode });
 
 const onLoaded = () => (data.loading = false);
 
 const logIt = (data) => {
+  data.barcode = data;
   alert(data, data.codeResult.code);
 };
 
