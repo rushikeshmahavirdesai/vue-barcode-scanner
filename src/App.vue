@@ -15,7 +15,7 @@ const data = reactive({ loading: true, isAdding: false });
 const onLoaded = () => (data.loading = false);
 
 const logIt = (data) => {
-  alert(data, data.text);
+  alert(data, data.code);
 };
 
 const onDecode = async (text) => {
