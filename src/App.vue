@@ -1,13 +1,16 @@
 <template>
-  <div size="100%" title="Scan your Product" style="background: red; height: 100%">
+  <!-- <div size="100%" title="Scan your Product" style="background: red; height: 100%">
     <StreamBarcodeReader :onDetected="logIt" />
-  </div>
+  </div> -->
+  <BarChart />
+  <PieChart />
 </template>
 
 <script setup>
 import { ref, reactive } from "vue";
 import StreamBarcodeReader from "./components/ScannerModal.vue";
-
+import BarChart from "./components/Chart.vue";
+import PieChart from "./components/PieChrat.vue";
 const data = reactive({ loading: true, isAdding: false, barcode: null });
 
 const onLoaded = () => (data.loading = false);

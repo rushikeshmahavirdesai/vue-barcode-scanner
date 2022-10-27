@@ -8,9 +8,11 @@
   },
   "dependencies": {
     "@zxing/library": "^0.19.1",
+    "chart.js": "^3.9.1",
     "html5-qrcode": "^2.2.4",
     "quagga": "^0.12.1",
-    "vue": "^3.2.41"
+    "vue": "^3.2.41",
+    "vue-chartjs": "^4.1.2"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^3.1.2",
