@@ -1,9 +1,9 @@
 <template>
-  <!-- <div size="100%" title="Scan your Product" style="background: red; height: 100%">
+  <div size="100%" title="Scan your Product" style="background: red; height: 100%">
     <StreamBarcodeReader :onDetected="logIt" />
-  </div> -->
-  <BarChart />
-  <PieChart />
+  </div>
+  <!-- <BarChart />
+  <PieChart /> -->
 </template>
 
 <script setup>

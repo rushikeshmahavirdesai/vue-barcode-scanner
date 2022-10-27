@@ -1,0 +1,66 @@
+{
+  "typescript": true,
+  "commands": [
+    "./commands",
+    "@adonisjs/core/build/commands/index.js",
+    "@adonisjs/repl/build/commands",
+    "@adonisjs/lucid/build/commands"
+  ],
+  "exceptionHandlerNamespace": "App/Exceptions/Handler",
+  "aliases": {
+    "App": "app",
+    "Config": "config",
+    "Database": "database",
+    "Contracts": "contracts"
+  },
+  "preloads": [
+    "./start/routes",
+    "./start/kernel",
+    "./start/globals",
+    {
+      "file": "./start/generator",
+      "environment": ["web"]
+    },
+
+    {
+      "file": "./start/frontend",
+      "environment": ["web"]
+    }
+  ],
+  "providers": [
+    "./providers/AppProvider",
+    "@adonisjs/core",
+    "@adonisjs/session",
+    "@adonisjs/view",
+    "@adonisjs/shield",
+    "@adonisjs/lucid",
+    "@adonisjs/auth",
+    "@adonisjs/ally",
+    "@adonisjs/drive-gcs"
+  ],
+  "metaFiles": [
+    {
+      "pattern": "public/**/*",
+      "reloadServer": false
+    },
+    {
+      "pattern": "resources/views/**/*.edge",
+      "reloadServer": false
+    },
+    {
+      "pattern": "entry.json",
+      "reloadServer": true
+    }
+  ],
+  "aceProviders": ["@adonisjs/repl"],
+  "tests": {
+    "suites": [
+      {
+        "name": "functional",
+        "files": ["tests/functional/**/*.spec(.ts|.js)"],
+        "timeout": 60000
+      }
+    ]
+  },
+  "testProviders": ["@japa/preset-adonis/TestsProvider"]
+}
